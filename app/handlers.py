@@ -1,14 +1,17 @@
 import os
+import random
+import string
 
 from aiogram import Router, F
-from aiogram.types import Message, CallbackQuery, FSInputFile
+from aiogram.types import Message, CallbackQuery, FSInputFile, BufferedInputFile
 from aiogram.filters import CommandStart, Command
 from aiogram.fsm.state import StatesGroup, State
 from aiogram.fsm.context import FSMContext
 
 from app.generators import generate, gigabot
-from app.keyboards import welcome_text, start
+from app.keyboards import welcome_text, start, effects
 from app.generators import get_image
+from app.imageprocessing import *
 
 router = Router()
 
@@ -20,6 +23,10 @@ class Generate(StatesGroup):
 class Talk(StatesGroup):
     text = State()
     img = State()
+
+
+class Effect(StatesGroup):
+    photo = State()
 
 
 @router.message(CommandStart())
@@ -88,3 +95,52 @@ async def fusion_brain(message: Message, state: FSMContext):
         await message.answer_photo(photo=img)
 
         os.remove(f'images/image{image_number}.jpg')
+
+
+@router.callback_query(F.data == 'imageprocessing')
+async def request_photo(callback: CallbackQuery, state: FSMContext):
+    await state.set_state(Effect.photo)
+    await callback.message.answer('Пришлите фото, на которое будем накладывать эффект')
+
+
+@router.message(Effect.photo)
+async def handle_photo(message: Message, state: FSMContext):
+    if not message.photo:
+        await message.answer("Сообщение не содержит фото. Пожалуйста, отправьте фото.")
+        return
+
+    random_code = ''.join(random.choices(string.digits, k=5))
+
+    # Задаем путь для сохранения фото
+    file_path = f'uploads/{random_code}.jpg'
+    os.makedirs(os.path.dirname(file_path), exist_ok=True)
+
+    # Получаем файл
+    photo = message.photo[-1]
+    file = await message.bot.get_file(photo.file_id)
+    await message.bot.download_file(file.file_path, destination=file_path)
+
+    with open(file_path, 'rb') as photo_file:
+        input_file = BufferedInputFile(photo_file.read(), filename=file_path)
+    await message.answer_photo(photo=input_file, caption='Выберите нужный эффект', reply_markup=effects)
+
+    await state.update_data(path=file_path)
+
+
+@router.callback_query(F.data.startswith('effect'))
+async def perform_effect(callback: CallbackQuery, state: FSMContext):
+    data = await state.get_data()
+    input_path = data['path']
+    output_path = input_path.split('/')[0] + '/' + input_path.split('/')[1].split('.')[0] + '_output.jpg'
+
+    apply_pastel_filter(input_path, output_path)
+
+    with open(output_path, 'rb') as photo_file:
+        output_file = BufferedInputFile(photo_file.read(), filename=output_path)
+
+    await callback.message.answer_photo(photo=output_file)
+
+    try:
+        os.remove(output_path)
+    except Exception as e:
+        print(f"Error deleting files: {e}")

@@ -3,7 +3,8 @@ from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 start = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text='Текстовый режим', callback_data='text')],
-    [InlineKeyboardButton(text='Генерация изображений', callback_data='image')]
+    [InlineKeyboardButton(text='Генерация изображений', callback_data='image')],
+    [InlineKeyboardButton(text='Наложение эффектов', callback_data='imageprocessing')]
 ])
 
 welcome_text = f"""
@@ -19,3 +20,8 @@ welcome_text = f"""
 
 Порой я могу ошибаться и не понимать ваши просьбы. Но я много учусь, чтобы стать лучше!
 """
+
+effects = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text='Ретро', callback_data='effect_retro)')],
+    [InlineKeyboardButton(text='ЧБ', callback_data='effect_black_and_white')]
+])
