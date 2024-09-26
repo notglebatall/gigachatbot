@@ -103,6 +103,12 @@ async def request_photo(callback: CallbackQuery, state: FSMContext):
     await callback.message.answer('Пришлите фото, на которое будем накладывать эффект')
 
 
+@router.message(Command('filters'))
+async def request_photo_for_filter(message: Message, state: FSMContext):
+    await state.set_state(Effect.photo)
+    await message.answer('Пришлите фото, на которое будем накладывать эффект')
+
+
 @router.message(Effect.photo)
 async def handle_photo(message: Message, state: FSMContext):
     if not message.photo:
@@ -127,13 +133,127 @@ async def handle_photo(message: Message, state: FSMContext):
     await state.update_data(path=file_path)
 
 
-@router.callback_query(F.data.startswith('effect'))
-async def perform_effect(callback: CallbackQuery, state: FSMContext):
+@router.callback_query(F.data == 'effect_bw')
+async def perform_effect_bw(callback: CallbackQuery, state: FSMContext):
+    data = await state.get_data()
+    input_path = data['path']
+    output_path = input_path.split('/')[0] + '/' + input_path.split('/')[1].split('.')[0] + '_output.jpg'
+
+    apply_bw_filter(input_path, output_path)
+
+    with open(output_path, 'rb') as photo_file:
+        output_file = BufferedInputFile(photo_file.read(), filename=output_path)
+
+    await callback.message.answer_photo(photo=output_file)
+
+    try:
+        os.remove(output_path)
+    except Exception as e:
+        print(f"Error deleting files: {e}")
+
+
+@router.callback_query(F.data == 'effect_night')
+async def perform_effect_night(callback: CallbackQuery, state: FSMContext):
+    data = await state.get_data()
+    input_path = data['path']
+    output_path = input_path.split('/')[0] + '/' + input_path.split('/')[1].split('.')[0] + '_output.jpg'
+
+    apply_night_filter(input_path, output_path)
+
+    with open(output_path, 'rb') as photo_file:
+        output_file = BufferedInputFile(photo_file.read(), filename=output_path)
+
+    await callback.message.answer_photo(photo=output_file)
+
+    try:
+        os.remove(output_path)
+    except Exception as e:
+        print(f"Error deleting files: {e}")
+
+
+@router.callback_query(F.data == 'effect_highlight')
+async def perform_effect_highlight(callback: CallbackQuery, state: FSMContext):
+    data = await state.get_data()
+    input_path = data['path']
+    output_path = input_path.split('/')[0] + '/' + input_path.split('/')[1].split('.')[0] + '_output.jpg'
+
+    apply_highlight_filter(input_path, output_path)
+
+    with open(output_path, 'rb') as photo_file:
+        output_file = BufferedInputFile(photo_file.read(), filename=output_path)
+
+    await callback.message.answer_photo(photo=output_file)
+
+    try:
+        os.remove(output_path)
+    except Exception as e:
+        print(f"Error deleting files: {e}")
+
+
+@router.callback_query(F.data == 'effect_city')
+async def perform_effect_city(callback: CallbackQuery, state: FSMContext):
+    data = await state.get_data()
+    input_path = data['path']
+    output_path = input_path.split('/')[0] + '/' + input_path.split('/')[1].split('.')[0] + '_output.jpg'
+
+    apply_city_filter(input_path, output_path)
+
+    with open(output_path, 'rb') as photo_file:
+        output_file = BufferedInputFile(photo_file.read(), filename=output_path)
+
+    await callback.message.answer_photo(photo=output_file)
+
+    try:
+        os.remove(output_path)
+    except Exception as e:
+        print(f"Error deleting files: {e}")
+
+
+@router.callback_query(F.data == 'effect_pastel')
+async def perform_effect_pastel(callback: CallbackQuery, state: FSMContext):
     data = await state.get_data()
     input_path = data['path']
     output_path = input_path.split('/')[0] + '/' + input_path.split('/')[1].split('.')[0] + '_output.jpg'
 
     apply_pastel_filter(input_path, output_path)
+
+    with open(output_path, 'rb') as photo_file:
+        output_file = BufferedInputFile(photo_file.read(), filename=output_path)
+
+    await callback.message.answer_photo(photo=output_file)
+
+    try:
+        os.remove(output_path)
+    except Exception as e:
+        print(f"Error deleting files: {e}")
+
+
+@router.callback_query(F.data == 'effect_retro')
+async def perform_effect_retro(callback: CallbackQuery, state: FSMContext):
+    data = await state.get_data()
+    input_path = data['path']
+    output_path = input_path.split('/')[0] + '/' + input_path.split('/')[1].split('.')[0] + '_output.jpg'
+
+    apply_retro_filter(input_path, output_path)
+
+    with open(output_path, 'rb') as photo_file:
+        output_file = BufferedInputFile(photo_file.read(), filename=output_path)
+
+    await callback.message.answer_photo(photo=output_file)
+
+    try:
+        os.remove(output_path)
+    except Exception as e:
+        print(f"Error deleting files: {e}")
+
+
+@router.callback_query(F.data == 'effect_brownish')
+async def perform_effect_brownish(callback: CallbackQuery, state: FSMContext):
+    data = await state.get_data()
+    input_path = data['path']
+    output_path = input_path.split('/')[0] + '/' + input_path.split('/')[1].split('.')[0] + '_output.jpg'
+
+    apply_brownish_filter(input_path, output_path)
 
     with open(output_path, 'rb') as photo_file:
         output_file = BufferedInputFile(photo_file.read(), filename=output_path)

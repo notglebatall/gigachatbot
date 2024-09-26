@@ -22,6 +22,14 @@ welcome_text = f"""
 """
 
 effects = InlineKeyboardMarkup(inline_keyboard=[
-    [InlineKeyboardButton(text='Ретро', callback_data='effect_retro)')],
-    [InlineKeyboardButton(text='ЧБ', callback_data='effect_black_and_white')]
+    [InlineKeyboardButton(text='ЧБ', callback_data='effect_bw')],
+    [InlineKeyboardButton(text='Ретро', callback_data='effect_retro')],
+    [InlineKeyboardButton(text='Высветление', callback_data='effect_highlight')],
+    [InlineKeyboardButton(text='Город', callback_data='effect_city')],
+    [InlineKeyboardButton(text='Ночь', callback_data='effect_night')],
+    [InlineKeyboardButton(text='Пастель', callback_data='effect_pastel')],
+    [InlineKeyboardButton(text='Черно-коричневый', callback_data='effect_brownish')],
+
+
+
 ])

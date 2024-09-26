@@ -10,45 +10,86 @@ def apply_bw_filter(input_path, output_path):
     subprocess.run(command, check=True)
 
 
-def apply_light_brightness_filter(input_path, output_path):
-    # Легкое высветление: увеличиваем яркость на 10%
+def apply_highlight_filter(input_path, output_path):
     command = [
-        'C:\\Program Files\\ImageMagick-7.1.1-Q16-HDRI\\magick.exe', input_path,
-        '-modulate', '110,100,100',  # Яркость: 110%, Насыщенность и Оттенок без изменений
+        'C:\\Program Files\\ImageMagick-7.1.1-Q16-HDRI\\magick.exe',
+        input_path,
+        # Температура и Оттенок
+        '-colorspace', 'RGB',
+        '-fuzz', '10%',  # изменяет "фокус" для тонкого управления цветовыми изменениям
+        # Экспозиция (Экспонир)
+        '-brightness-contrast', '10x0',  # +1.05 экспозиция (примерно)
+        # Контрастность
+        '-brightness-contrast', '0x-5',
+        # Светлые области и Тени - можно с помощью "-level" но сложно полностью аналогично
+        '-level', '0%,45%,1.0',  # это сильно изменяет светлые области и тени
+        # Затемнение (можно изменять яркость минус выражением)
+        '-fill', 'black',
+        '-colorize', '13',
+        # Четкость
+        '-sharpen', '0x1.5',
+        # Красочность (больше насыщенность)
+        '-modulate', '100,110,100',  # второе число увеличивает насыщенность
         output_path
     ]
+
     subprocess.run(command, check=True)
 
 
-def apply_pastel_filter(input_path, output_path):
-    # Пастель: уменьшаем насыщенность и повышаем яркость
+def apply_city_filter(input_path, output_path):
     command = [
         'C:\\Program Files\\ImageMagick-7.1.1-Q16-HDRI\\magick.exe', input_path,
-        '-modulate', '105,80,100',  # Яркость: 105%, Насыщенность: 80%, Оттенок без изменений
-        '-contrast-stretch', '0x5%',  # Повышаем контрастность
+        '-modulate', '120,100,100',
+        '-sigmoidal-contrast', '3x50%',
+        '-sharpen', '0x1',
+        '-attenuate', '0.5', '+noise', 'Gaussian',
         output_path
     ]
     subprocess.run(command, check=True)
 
 
 def apply_night_filter(input_path, output_path):
-    # Ночной эффект: понижаем яркость и добавляем синий оттенок
     command = [
         'C:\\Program Files\\ImageMagick-7.1.1-Q16-HDRI\\magick.exe', input_path,
-        '-modulate', '80,80,100',  # Яркость и Насыщенность: 80%
-        '-colorize', '20,20,60',   # Добавляем синий оттенок
+        '-modulate', '80,50,100',
+        '-fill', 'blue', '-colorize', '30%',
+        '-gamma', '0.7',
+        '-contrast',
+        output_path
+    ]
+    subprocess.run(command, check=True)
+
+
+def apply_pastel_filter(input_path, output_path):
+    command = [
+        'C:\\Program Files\\ImageMagick-7.1.1-Q16-HDRI\\magick.exe', input_path,
+        '-modulate', '110,80,90',
+        '-fill', 'lavender', '-colorize', '15%',
+        '-brightness-contrast', '-10x10',
+        '-blur', '0x1',
         output_path
     ]
     subprocess.run(command, check=True)
 
 
 def apply_retro_filter(input_path, output_path):
-    # Ретро эффект: альтернативный вариант
     command = [
         'C:\\Program Files\\ImageMagick-7.1.1-Q16-HDRI\\magick.exe', input_path,
-        '-sepia-tone', '70%',      # Применяем сепию
-        '-grain', '10',            # Добавляем зернистость
-        '-vignette', '0x1',        # Добавляем виньетку
+        '-sepia-tone', '60%',
+        '-modulate', '100,50,100',
+        '-contrast', '-contrast',
+        '-noise', '5',
+        output_path
+    ]
+    subprocess.run(command, check=True)
+
+
+def apply_brownish_filter(input_path, output_path):
+    command = [
+        'C:\\Program Files\\ImageMagick-7.1.1-Q16-HDRI\\magick.exe', input_path,
+        '-colorspace', 'Gray',
+        '-fill', 'brown', '-colorize', '30%',
+        '-sepia-tone', '50%',
         output_path
     ]
     subprocess.run(command, check=True)
