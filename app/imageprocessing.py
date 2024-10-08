@@ -84,12 +84,4 @@ def apply_retro_filter(input_path, output_path):
     subprocess.run(command, check=True)
 
 
-def apply_brownish_filter(input_path, output_path):
-    command = [
-        'C:\\Program Files\\ImageMagick-7.1.1-Q16-HDRI\\magick.exe', input_path,
-        '-colorspace', 'Gray',
-        '-fill', 'brown', '-colorize', '30%',
-        '-sepia-tone', '50%',
-        output_path
-    ]
-    subprocess.run(command, check=True)
+

@@ -10,7 +10,7 @@ start = InlineKeyboardMarkup(inline_keyboard=[
 welcome_text = f"""
 Привет, это IdeaChat!
 
-Я на все руки мастер: пишу, рисую, объясняю, работаю с файлами. Могу общаться голосовыми сообщениями!
+Я на все руки мастер: пишу, рисую, объясняю, работаю с файлами.
 
 Чтобы я точно понял ваш запрос, закладывайте в него четкие инструкции. Например, начните диалог с глаголов:
 • Напиши — составлю текст.
@@ -28,8 +28,4 @@ effects = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text='Город', callback_data='effect_city')],
     [InlineKeyboardButton(text='Ночь', callback_data='effect_night')],
     [InlineKeyboardButton(text='Пастель', callback_data='effect_pastel')],
-    [InlineKeyboardButton(text='Черно-коричневый', callback_data='effect_brownish')],
-
-
-
 ])
