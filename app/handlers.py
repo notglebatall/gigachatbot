@@ -72,6 +72,7 @@ async def giga_response(message: Message, state: FSMContext):
     await waiting_message.delete()
     await state.clear()
     await message.answer(response)
+    await state.set_state(Talk.text)
 
 
 @router.message(Talk.img)
@@ -95,6 +96,8 @@ async def fusion_brain(message: Message, state: FSMContext):
         await message.answer_photo(photo=img)
 
         os.remove(f'images/image{image_number}.jpg')
+
+        await state.set_state(Talk.img)
 
 
 @router.callback_query(F.data == 'imageprocessing')
