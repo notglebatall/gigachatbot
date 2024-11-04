@@ -3,7 +3,7 @@ import subprocess
 
 def apply_bw_filter(input_path, output_path):
     command = [
-        'magick', input_path,
+        'convert', input_path,  # используем 'convert' вместо 'magick.exe'
         '-colorspace', 'Gray',
         output_path
     ]
@@ -12,7 +12,7 @@ def apply_bw_filter(input_path, output_path):
 
 def apply_highlight_filter(input_path, output_path):
     command = [
-        'magick',
+        'convert',
         input_path,
         # Температура и Оттенок
         '-colorspace', 'RGB',
@@ -38,7 +38,7 @@ def apply_highlight_filter(input_path, output_path):
 
 def apply_city_filter(input_path, output_path):
     command = [
-        'magick', input_path,
+        'convert', input_path,
         '-modulate', '120,100,100',
         '-sigmoidal-contrast', '3x50%',
         '-sharpen', '0x1',
@@ -50,7 +50,7 @@ def apply_city_filter(input_path, output_path):
 
 def apply_night_filter(input_path, output_path):
     command = [
-        'magick', input_path,
+        'convert', input_path,
         '-modulate', '80,50,100',
         '-fill', 'blue', '-colorize', '30%',
         '-gamma', '0.7',
@@ -62,7 +62,7 @@ def apply_night_filter(input_path, output_path):
 
 def apply_pastel_filter(input_path, output_path):
     command = [
-        'magick', input_path,
+        'convert', input_path,
         '-modulate', '110,80,90',
         '-fill', 'lavender', '-colorize', '15%',
         '-brightness-contrast', '-10x10',
@@ -74,7 +74,7 @@ def apply_pastel_filter(input_path, output_path):
 
 def apply_retro_filter(input_path, output_path):
     command = [
-        'magick', input_path,
+        'convert', input_path,
         '-sepia-tone', '60%',
         '-modulate', '100,50,100',
         '-contrast', '-contrast',
