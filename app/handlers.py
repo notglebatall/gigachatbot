@@ -245,22 +245,3 @@ async def perform_effect_retro(callback: CallbackQuery, state: FSMContext):
         os.remove(output_path)
     except Exception as e:
         print(f"Error deleting files: {e}")
-
-
-@router.callback_query(F.data == 'effect_brownish')
-async def perform_effect_brownish(callback: CallbackQuery, state: FSMContext):
-    data = await state.get_data()
-    input_path = data['path']
-    output_path = input_path.split('/')[0] + '/' + input_path.split('/')[1].split('.')[0] + '_output.jpg'
-
-    apply_brownish_filter(input_path, output_path)
-
-    with open(output_path, 'rb') as photo_file:
-        output_file = BufferedInputFile(photo_file.read(), filename=output_path)
-
-    await callback.message.answer_photo(photo=output_file)
-
-    try:
-        os.remove(output_path)
-    except Exception as e:
-        print(f"Error deleting files: {e}")
